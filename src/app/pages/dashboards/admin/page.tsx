@@ -17,7 +17,6 @@ import { SalesProps } from "@/props/RecentSales";
 
 export default function Dashboard() {
     const { data: session, status } = useSession()
-    const [data, setData] = useState<Container[]>()
     const [amountData, setAmountData] = useState<string[]>(["0", "0", "0"])
     const [exportAmount, setExportAmount] = useState<number>(0)
     const [income, setIncome] = useState(0)

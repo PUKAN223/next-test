@@ -1,8 +1,6 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
 import fileToBase64 from "@/functions/fileToBase64";
 import { ContainerSchema } from "@/schemas/Containers";
-import { addContainers } from "@/functions/stock/add"
-import { editContainers } from '@/functions/stock/edit';
 import { toast } from 'sonner';
 import Histories from '@/props/Histories';
 
@@ -80,7 +78,7 @@ export default function handleSubmitEdit(
                             },
                             body: JSON.stringify({ data: formObject, action: "edit", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})` } as unknown as Histories),
                         }).then(res => res.json())
-                            .then(res => {
+                            .then(_res => {
                                 onSetEditOpen(false)
                             })
                     })

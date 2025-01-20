@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import handleLogin from "./handles/handleLogin";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const routers = useRouter()

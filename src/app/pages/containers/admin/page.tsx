@@ -15,7 +15,6 @@ import { ContainerSchema } from "@/schemas/Containers";
 import DialogAddContainers from "@/dialogs/containers/addContainers";
 import DialogExportContainers from "@/dialogs/containers/exportContainers";
 import { Upload } from "lucide-react";
-import { getAllContainers, getContainers } from "@/functions/stock/get";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Histories from "@/props/Histories";
@@ -32,7 +31,6 @@ export default function Containers() {
     useEffect(() => {
         if (!session) redirect("/pages/containers")
         if (session.user.role == "user") redirect("/pages/containers")
-        const allElement = document.getElementsByTagName("*")
         setColumns(ContainerData)
         const fetchData = async () => {
             const response = await fetch("http://localhost:3000/api/stock/containers/get")

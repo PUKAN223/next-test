@@ -1,11 +1,8 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
 import fileToBase64 from "@/functions/fileToBase64";
 import { ContainerSchema } from "@/schemas/Containers";
-import { addContainers } from '@/functions/stock/add';
-import Container from '@/props/Containers';
 import { toast } from 'sonner';
 import Histories from '@/props/Histories';
-import { useSession } from 'next-auth/react';
 
 export default function handleSubmitAdd(
     event: FormEvent<HTMLFormElement>,
@@ -17,7 +14,6 @@ export default function handleSubmitAdd(
     logo: File,
     form: any
 ) {
-    // const { data: session, status } = useSession()
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     const formObject: any = {};
@@ -85,7 +81,7 @@ export default function handleSubmitAdd(
                             },
                             body: JSON.stringify({ data: formObject, action: "import", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})`} as Histories),
                         }).then(res => res.json())
-                            .then(res => {
+                            .then(_res => {
                                 form.reset()
                                 onAddOpen(false)
                             })

@@ -3,13 +3,10 @@
 import type { Metadata } from "next";
 import { Kanit } from "next/font/google";
 import "./globals.css";
-import SideNavbar from "@/components/SideNavber";
 import { Toaster } from "@/components/ui/sonner"
 import SessionProvider from "@/components/SessionProviders";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
-import { getServerSideProps } from "next/dist/build/templates/pages";
-import Wrap from "@/components/Wrap";
 
 const inter = Kanit({
     weight: ['400', '700'],

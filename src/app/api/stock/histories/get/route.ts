@@ -1,5 +1,4 @@
 import ConnectDB from "@/functions/mongodbConnect"
-import Container from "@/props/Containers"
 
 export async function GET() {
     const client = await ConnectDB()

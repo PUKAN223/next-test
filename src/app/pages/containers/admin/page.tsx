@@ -27,14 +27,14 @@ export default function Containers() {
     const [addOpen, setAddOpen, addData, setAddData] = useDialogData()
     const [exportOpen, setExportOpen, exportData, setExportData] = useDialogData()
     const [isUpdate, SetIsUpdate] = useState<boolean>(false)
-
+    console.log(process.env.API_URL)
     useEffect(() => {
         if (!session) redirect("/pages/containers")
         if (session.user.role == "user") redirect("/pages/containers")
         setColumns(ContainerData)
         const fetchData = async () => {
-            const response = await fetch(`${process.env.API_URL}/api/stock/containers/get`)
-            const response1 = await fetch(`${process.env.API_URL}/api/stock/histories/get`)
+            const response = await fetch(`/api/stock/containers/get`)
+            const response1 = await fetch(`/api/stock/histories/get`)
             const data = await response.json()
             const histories = (await response1.json() as { data: Histories[] }).data
             const exportAmount = histories.filter(x => x.action == "export").map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)

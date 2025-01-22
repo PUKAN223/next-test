@@ -206,7 +206,7 @@ export function DataTable<TData, TValue>({
 
                                                 <Button
                                                     onClick={() => {
-                                                        fetch(`${process.env.API_URL}/api/stock/containers/get`)
+                                                        fetch(`/api/stock/containers/get`)
                                                             .then(res => res.json())
                                                             .then(data => {
                                                                 setManageData(true, data[0])

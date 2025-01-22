@@ -28,7 +28,7 @@ function EmployeePage() {
     if (session.user.role == "user") redirect("/pages/dashboards")
 
     const fetchData = async () => {
-      const response = await fetch(`${process.env.API_URL}/api/employees/get`)
+      const response = await fetch(`/api/employees/get`)
       const employeeData: Employees[] = await response.json()
       setEmployee(employeeData)
     }

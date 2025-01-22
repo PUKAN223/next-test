@@ -110,7 +110,7 @@ export default function DialogManageContainers({ manageOpen, onSetManageOpen, da
                                                         const deleted = newData.stock[index]
                                                         newData.stock.splice(index, 1)
                                                         delete newData["_id"]
-                                                        fetch(`${process.env.API_URL}/api/stock/containers/edit/${data._id}`, {
+                                                        fetch(`/api/stock/containers/edit/${data._id}`, {
                                                             method: "PUT",
                                                             headers: {
                                                                 "Content-Type": "application/json"
@@ -119,7 +119,7 @@ export default function DialogManageContainers({ manageOpen, onSetManageOpen, da
                                                         })
                                                             .then(res => res.json())
                                                             .then(res => {
-                                                                fetch(`${process.env.API_URL}/api/stock/histories/add`, {
+                                                                fetch(`/api/stock/histories/add`, {
                                                                     method: "POST",
                                                                     headers: {
                                                                         "Content-Type": "application/json"

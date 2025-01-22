@@ -73,7 +73,7 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
             container.stock = container.stock.filter((stock) => stock.amount > 0);
             const d1 = container._id
             delete container["_id"]
-            fetch(`${process.env.API_URL}/api/stock/containers/edit/${d1}`, {
+            fetch(`/api/stock/containers/edit/${d1}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -81,7 +81,7 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
                 body: JSON.stringify(container),
             }).then(res => {
                 oldData.stock[0].amount = q
-                fetch(`${process.env.API_URL}/api/stock/histories/add`, {
+                fetch(`/api/stock/histories/add`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

@@ -27,7 +27,7 @@ export default function Dashboard() {
         if (session.user.role == "user") redirect("/pages/dashboards");
 
         const fetchData = async () => {
-            const response1 = await fetch("http://localhost:3000/api/stock/histories/get")
+            const response1 = await fetch(`${process.env.API_URL}/api/stock/histories/get`)
             const histories = (await response1.json() as { data: Histories[] }).data
             const month = new Date().toLocaleDateString().split("/")[0]
             const exportSell = histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].sellPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)

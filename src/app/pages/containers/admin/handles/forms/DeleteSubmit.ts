@@ -16,12 +16,12 @@ export default function handleSubmitDelete(
         submitButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`
     }
     getContainers(id).then(data => {
-        fetch(`http://localhost:3000/api/stock/containers/delete/${id}`, {
+        fetch(`${process.env.API_URL}/api/stock/containers/delete/${id}`, {
             method: "DELETE"
         }).then(_res => {
             delete data[0]["_id"]
             toast("ลบคลังสินค้าสำเร็จ")
-            fetch(`http://localhost:3000/api/stock/histories/add`, {
+            fetch(`${process.env.API_URL}/api/stock/histories/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

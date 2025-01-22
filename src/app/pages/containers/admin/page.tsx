@@ -33,8 +33,8 @@ export default function Containers() {
         if (session.user.role == "user") redirect("/pages/containers")
         setColumns(ContainerData)
         const fetchData = async () => {
-            const response = await fetch("http://localhost:3000/api/stock/containers/get")
-            const response1 = await fetch("http://localhost:3000/api/stock/histories/get")
+            const response = await fetch(`${process.env.API_URL}/api/stock/containers/get`)
+            const response1 = await fetch(`${process.env.API_URL}/api/stock/histories/get`)
             const data = await response.json()
             const histories = (await response1.json() as { data: Histories[] }).data
             const exportAmount = histories.filter(x => x.action == "export").map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)

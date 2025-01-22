@@ -144,6 +144,7 @@ export function DataTable<TData, TValue>({
                             {columns.map((column) => (
                                 <TableHead style={{ maxWidth: "1000px", width: "30%" }} key={column.id}>{column.header as any}</TableHead>
                             ))}
+                            <TableHead style={{ maxWidth: "1000px", width: "30%" }} key={"t1"}></TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -205,9 +206,11 @@ export function DataTable<TData, TValue>({
 
                                                 <Button
                                                     onClick={() => {
-                                                        getContainers((row as any)._id).then(res => {
-                                                            setManageData(true, res[0])
-                                                        })
+                                                        fetch(`${process.env.API_URL}/api/stock/containers/get`)
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                setManageData(true, data[0])
+                                                            })
                                                     }}
                                                     id={(row as any).id as string}
                                                 >

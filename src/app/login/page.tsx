@@ -43,48 +43,56 @@ export default function Home() {
   console.log(status)
 
   return (
-      <div className="flex justify-center items-center min-h-screen p-6 flex-col bg-gray-50">
-        <Image className="mt-4" src={"/stock-icons.png"} width={200} height={200} alt="Logo" />
-        <h2 className="text-xl font-bold mt-6 mb-4">การเข้าสู่ระบบสำหรับพนักงาน</h2>
-        <Form {...loginForm}>
-          <form className="w-full max-w-sm mx-auto space-y-3" onSubmit={loginForm.handleSubmit((data) => handleLogin(data, setErrors, routers, () => resetPage()))}>
-            <FormField
-              control={loginForm.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    ชื่อผู้ใช้
-                    {errors.user && (
-                      <span className="text-red-500 text-sm ml-2">* {errors.user}</span>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Username" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={loginForm.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    รหัสผ่าน
-                    {errors.password && (
-                      <span className="text-red-500 text-sm ml-2">* {errors.password}</span>
-                    )}
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Password" type="password" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full mt-4" id="submit-btn">เข้าสู่ระบบ</Button>
-          </form>
-        </Form>
+    <div className="flex justify-center items-center min-h-screen p-6 flex-col bg-gray-50">
+      <Image className="mt-4" src={"/stock-icons.png"} width={200} height={200} alt="Logo" />
+      <h2 className="text-xl font-bold mt-6 mb-4">การเข้าสู่ระบบสำหรับพนักงาน</h2>
+      <Form {...loginForm}>
+        <form className="w-full max-w-sm mx-auto space-y-3" onSubmit={loginForm.handleSubmit((data) => handleLogin(data, setErrors, routers, () => resetPage()))}>
+          <FormField
+            control={loginForm.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  ชื่อผู้ใช้
+                  {errors.user && (
+                    <span className="text-red-500 text-sm ml-2">* {errors.user}</span>
+                  )}
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="Username" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={loginForm.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  รหัสผ่าน
+                  {errors.password && (
+                    <span className="text-red-500 text-sm ml-2">* {errors.password}</span>
+                  )}
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" type="password" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full mt-4" id="submit-btn">เข้าสู่ระบบ</Button>
+        </form>
+      </Form>
+      <div className="flex translate-y-5">
+        <p>
+          หากต้องการเข้าสู่ระบบสำหรับเเอดมิน
+        </p>
+        <a className="text-blue-500" href="login/admin">
+          คลิ้กที่นี่
+        </a>
       </div>
+    </div>
   );
 }

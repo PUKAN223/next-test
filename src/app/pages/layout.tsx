@@ -5,9 +5,10 @@ import { Kanit } from "next/font/google";
 import "../globals.css";
 import { cn } from "../../lib/utils";
 import SideNavbar from "@/components/SideNavber";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 const inter = Kanit({
   weight: ['400', '700'],
@@ -27,6 +28,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions)
+  if (!session) {
+    redirect("/")
+  }
+
   return (
     <html lang="en">
       <meta
@@ -35,18 +40,32 @@ export default async function RootLayout({
       />
       <body
         className={cn(
-          "min-h-screen w-full bg-white text-black flex ",
+          "min-h-screen w-full bg-white text-black flex",
           inter.className,
           {
             "debug-screens": process.env.NODE_ENV === "development"
           }
         )}
       >
+        {/* Layout wrapper */}
         <div className="flex w-full">
-          <SideNavbar role={session.user.role} userName={session.user.username} userImage={"https://ui.shadcn.com/avatars/shadcn.jpg"} />
-          <div className="p-8 w-full">{children}</div>
-          <Toaster />
+          {/* Sidebar with 20% width */}
+          <div id="w-id" className="fixed top-0 left-0 h-full"> {/* Sidebar takes 20% */}
+            <SideNavbar 
+              role={session.user.role} 
+              userName={session.user.username} 
+              userImage={`https://icon-library.com/images/no-profile-pic-icon/no-profile-pic-icon-11.jpg`} 
+            />
+          </div>
+
+          {/* Main content area with 20% width */}
+          <div id="cont" className="p-8"> {/* Content area takes 20% */}
+            {children}
+          </div>
         </div>
+
+        {/* Toast notifications */}
+        <Toaster />
       </body>
     </html>
   );

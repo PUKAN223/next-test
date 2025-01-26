@@ -2,51 +2,51 @@ import BarData from "@/props/BarData";
 
 const barData: BarData[] = [
     {
-        name: "Jan",
+        name: "ม.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Feb",
+        name: "ก.พ.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Mar",
+        name: "มี.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Apr",
+        name: "เม.ย.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "May",
+        name: "พ.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Jun",
+        name: "มิ.ย.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Jul",
+        name: "ก.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Aug",
+        name: "ส.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Sep",
+        name: "ก.ย.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Oct",
+        name: "ต.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Nov",
+        name: "พ.ย.",
         total: Math.floor(Math.random() * 5000) + 1000
     },
     {
-        name: "Dec",
+        name: "ธ.ค.",
         total: Math.floor(Math.random() * 5000) + 1000
     }
 ];

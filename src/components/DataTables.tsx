@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,14 +18,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
-    useReactTable
+    useReactTable,
 } from "@tanstack/react-table";
 import {
     Form,
@@ -41,7 +41,7 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow
+    TableRow,
 } from "@/components/ui/table";
 
 import {
@@ -49,8 +49,8 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Edit, Ellipsis, EllipsisVertical, Filter, Trash } from 'lucide-react'
+} from "@/components/ui/dropdown-menu";
+import { Edit, Ellipsis, EllipsisVertical, Filter, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -68,14 +68,15 @@ import DialogManageContainers from "@/dialogs/containers/manageContainers";
 import { getContainers } from "@/functions/stock/get";
 import React from "react";
 import DialogExportContainers from "@/dialogs/containers/exportContainers";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./ui/pagination";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     isActions: boolean;
     onUpdate: () => void;
-    user: string,
-    role: string
+    user: string;
+    role: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -84,8 +85,9 @@ export function DataTable<TData, TValue>({
     isActions,
     onUpdate,
     user,
-    role
+    role,
 }: DataTableProps<TData, TValue>) {
+    const [currIndex, setCurrIndex] = useState(0)
     const [searchTerm, setSearchTerm] = useState("");
     const [searchFilter, setSearchFilter] = useState<"name" | "category">("name"); // Dropdown filter choice
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -101,15 +103,27 @@ export function DataTable<TData, TValue>({
         data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel()
+        getPaginationRowModel: getPaginationRowModel(),
     });
-    const [editOpen, setEditOpen, editData, setEditData] = useDialogData()
-    const [deleteOpen, setDeleteOpen, deleteData, setDeleteData] = useDialogData()
-    const [manageOpen, setManageOpen, manageData, setManageData] = useDialogData()
+
+    const { pageIndex, pageSize } = table.getState().pagination;
+    const { setPageIndex, setPageSize, getCanPreviousPage: canPreviousPage, getCanNextPage: canNextPage, getPageCount: pageCount } = table;
+    const [editOpen, setEditOpen, editData, setEditData] = useDialogData();
+    const [deleteOpen, setDeleteOpen, deleteData, setDeleteData] = useDialogData();
+    const [manageOpen, setManageOpen, manageData, setManageData] = useDialogData();
 
     useEffect(() => {
-        onUpdate()
-    }, [deleteOpen, editOpen])
+        console.log(currIndex)
+        setPageIndex(currIndex)
+    }, [pageIndex])
+
+    useEffect(() => {
+        setPageSize(10)
+        if (deleteOpen == false && editOpen == false) {
+            setCurrIndex(pageIndex)
+            onUpdate()
+        }
+    }, [deleteOpen, editOpen]);
 
     return (
         <>
@@ -136,7 +150,7 @@ export function DataTable<TData, TValue>({
             <div className="rounded-md border">
                 <DialogManageContainers manageOpen={manageOpen} onSetManageOpen={(t) => setManageData(t)} data={manageData as any} onUpdate={onUpdate} user={user} role={role} />
                 <DialogEditContainers editOpen={editOpen} onSetEditOpen={(t) => setEditOpen(t)} editData={editData} schema={ContainerSchema} user={user} role={role} />
-                <DialogDeleteContainers deleteOpen={{ open: deleteOpen, data: deleteData }} onSetDeleteOpen={(t) => setDeleteOpen(t)} user={user} role={role} />
+                <DialogDeleteContainers deleteOpen={{ open: deleteOpen, data: deleteData }} onSetDeleteOpen={(t) => setDeleteOpen(t)} user={user} role={role} onUpdate={onUpdate} />
 
                 <Table>
                     <TableHeader>
@@ -149,27 +163,27 @@ export function DataTable<TData, TValue>({
                     </TableHeader>
 
                     <TableBody>
-                        {filteredData.length ? (
-                            filteredData.map((row, index) => (
-                                <TableRow key={index}>
+                        {table.getRowModel().rows.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} className="eff">
                                     {columns.map((column) => (
                                         <React.Fragment key={column.id}>
                                             {(column as any).accessorKey === "name" ? (
                                                 <TableCell className="text-black-500">
                                                     <div className="flex gap-2 items-center">
-                                                        <img className="h-10 w-10 rounded-[5px]" src={(row as any).logo} alt="product-image" />
-                                                        <span>{(column as any).accessorKey ? (row as any)[(column as any).accessorKey] : null}</span>
+                                                        <img className="h-10 w-10 rounded-[5px]" src={(row.original as Container).logo} alt="product-image" />
+                                                        <span>{(row.original as Container).name}</span>
                                                     </div>
                                                 </TableCell>
                                             ) : (
                                                 <>
                                                     {(column as any).accessorKey == "quantity" ? (
                                                         <TableCell className="text-black-500">
-                                                            {(row as { stock: any[] }).stock.reduce((a, b) => a + b.amount, 0)}
+                                                            {(row.original as unknown as { stock: any[] }).stock.reduce((a, b) => a + b.amount, 0)}
                                                         </TableCell>
                                                     ) : (
                                                         <TableCell className="text-black-500">
-                                                            {(column as any).accessorKey ? (row as any)[(column as any).accessorKey] : null}
+                                                            {(column as any).accessorKey ? (row.original as Container)[(column as any).accessorKey as "logo"] : null}
                                                         </TableCell>
                                                     )}
                                                 </>
@@ -178,7 +192,7 @@ export function DataTable<TData, TValue>({
                                     ))}
                                     {isActions && (
                                         <TableCell>
-                                            <div className="flex justify-end space-x-2 items-center" style={{ position: "relative"}}>
+                                            <div className="flex justify-end space-x-2 items-center" style={{ position: "relative" }}>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
                                                         <Button variant={"destructive"}><Ellipsis /></Button>
@@ -186,8 +200,8 @@ export function DataTable<TData, TValue>({
                                                     <DropdownMenuContent>
                                                         <DropdownMenuItem
                                                             onClick={() => {
-                                                                console.log(row)
-                                                                setEditData(true, row);
+                                                                console.log(row.original);
+                                                                setEditData(true, row.original);
                                                             }}
                                                             className="text-blue-500"
                                                         >
@@ -195,7 +209,7 @@ export function DataTable<TData, TValue>({
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             onClick={() => {
-                                                                setDeleteData(true, row);
+                                                                setDeleteData(true, row.original);
                                                             }}
                                                             className="text-red-500"
                                                         >
@@ -208,9 +222,9 @@ export function DataTable<TData, TValue>({
                                                     onClick={() => {
                                                         fetch(`/api/stock/containers/get`)
                                                             .then(res => res.json())
-                                                            .then(data => {
-                                                                setManageData(true, data[0])
-                                                            })
+                                                            .then((data: Container[]) => {
+                                                                setManageData(true, data.find(x => (x as any)._id == (row.original as any)._id));
+                                                            });
                                                     }}
                                                     id={(row as any).id as string}
                                                 >
@@ -232,24 +246,72 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
 
-            {/* Pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
+                {data.length > 0 ? (
+                    <Pagination>
+                        <PaginationContent>
+                            {/* Previous Button */}
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    href="#"
+                                    onClick={(e) => {
+                                        if (canPreviousPage()) {
+                                            e.preventDefault();
+                                            setCurrIndex(pageIndex - 1);
+                                            setPageIndex(pageIndex - 1);  // Go to previous page
+                                        } else e.preventDefault();
+                                    }}
+                                />
+                            </PaginationItem>
+
+                            {/* Page Number Logic */}
+                            {(() => {
+                                const start = Math.max(0, pageIndex - 2); // Start the page range 2 pages before the current page
+                                const end = Math.min(pageCount(), start + 5); // Limit the page range to 5 pages
+
+                                const pages = [];
+                                for (let i = start; i < end; i++) {
+                                    pages.push(i);
+                                }
+
+                                return pages.map((page) => (
+                                    <PaginationItem key={page}>
+                                        <PaginationLink
+                                            href="#"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setCurrIndex(page);
+                                                setPageIndex(page);  // Set page to the clicked page
+                                            }}
+                                            className={pageIndex === page ? "bg-black" : ""}
+                                            isActive={pageIndex === page}
+                                        >
+                                            <p className={pageIndex === page ? "text-white" : ""}>
+                                                {page + 1}
+                                            </p>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ));
+                            })()}
+
+                            {/* Next Button */}
+                            <PaginationItem>
+                                <PaginationNext
+                                    href="#"
+                                    onClick={(e) => {
+                                        if (canNextPage()) {
+                                            e.preventDefault();
+                                            setCurrIndex(pageIndex + 1)
+                                            setPageIndex(pageIndex + 1);  // Go to next page
+                                        } else e.preventDefault();
+                                    }}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );

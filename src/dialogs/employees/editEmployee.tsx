@@ -1,4 +1,4 @@
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -11,17 +11,19 @@ import { Toggle } from "@/components/ui/toggle";
 import fileToBase64 from "@/functions/fileToBase64";
 import { randomCode } from "@/functions/randomCode";
 import { toast } from "sonner";
+import Employees from "@/props/Employees";
 
 type Props = {
-    addOpen: boolean;
-    onSetAddOpen: (t: boolean) => void;
+    editOpen: boolean;
+    onSetEditOpen: (t: boolean) => void;
     schema: typeof EmployeeSchema;
     user: string;
     role: string;
+    editData: Employees;
     onUpdate: () => void
 }
 
-export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user, role, onUpdate }: Props) {
+export default function DialogEditEmployees({ editOpen, onSetEditOpen, schema, user, role, onUpdate, editData }: Props) {
     const [selectedGender, setSelectedGender] = useState<string | null>(null);
     const handleToggle = (gender: string) => {
         setSelectedGender(gender);
@@ -43,10 +45,19 @@ export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user
         resolver: zodResolver(schema),
         defaultValues: {
             profileName: "",
-            age: 18,
-            gender: "",
+            age: 18
         },
     });
+
+    useEffect(() => {
+        if (editData) {
+            form.reset({
+                profileName: `${editData.profile.name}`,
+                age: editData.profile.age
+            })
+            setSelectedGender(editData.profile.gender)
+        }
+    }, [editData])
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -103,14 +114,14 @@ export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user
                             cancelButton.disabled = true
                         }
                         submitButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`
-                        fetch("/api/employees/add", {
-                            method: "POST",
+                        fetch(`/api/employees/edit/${(editData as any)._id}`, {
+                            method: "PUT",
                             headers: {
                                 "Content-Type": "application/json"
                             },
                             body: JSON.stringify({
-                                username: `user${randomCode(3)}`,
-                                password: `${randomCode(4)}`,
+                                username: editData.username,
+                                password: editData.password,
                                 profile: {
                                     name: formObject["profileName"],
                                     age: formObject["age"],
@@ -123,13 +134,15 @@ export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user
                                 if (res.status !== 200) {
                                     window.location.reload()
                                 } else {
-                                    toast("เพิ่มพนักงานสำเร็จ")
+                                    toast("เเก้ไขพนักงานสำเร็จ")
                                     submitButton.disabled = false;
                                     cancelButton.disabled = false;
                                     submitButton.innerHTML = `ส่ง`,
                                     form.reset()
+                                    setLogo(null)
+                                    setSelectedGender(null)
                                     onUpdate()
-                                    onSetAddOpen(false)
+                                    onSetEditOpen(false)
                                 }
                             })
                         /**
@@ -165,7 +178,7 @@ export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user
     };
 
     return (
-        <Dialog open={addOpen} onOpenChange={(o) => onSetAddOpen(o)}>
+        <Dialog open={editOpen} onOpenChange={(o) => onSetEditOpen(o)}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>เพิ่มพนักงาน</DialogTitle>
@@ -269,7 +282,7 @@ export default function DialogAddEmployees({ addOpen, onSetAddOpen, schema, user
                         />
                         <br />
                         <div style={{ display: "flex", justifyContent: "flex-end" }} className="space-x-2">
-                            <Button className="w-[70px]" type="button" variant={"ghost"} id="emploCancelBtn" onClick={() => onSetAddOpen(false)}>ยกเลิก</Button>
+                            <Button className="w-[70px]" type="button" variant={"ghost"} id="emploCancelBtn" onClick={() => onSetEditOpen(false)}>ยกเลิก</Button>
                             <Button className="w-[90px]" type="submit" id="emploAddBtn">ส่ง</Button>
                         </div>
                     </form>

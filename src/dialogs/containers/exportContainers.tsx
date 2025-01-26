@@ -22,6 +22,7 @@ type Props = {
 }
 
 export default function DialogExportContainers({ exportOpen, onExportOpen, data, username, role }: Props) {
+    const dataF = data.filter(x => x.stock.reduce((a, b) => a + b.amount, 0) > 0)
     const [exportProduct, setExportProduct] = useState<{ [id: string]: number }>({});
     function handleQuantityChange(e: React.ChangeEvent<HTMLInputElement>, containers: Container & { _id: string }) {
         const allQuantity = containers.stock.map((stock) => stock.amount).reduce((a, b) => a + b, 0);
@@ -42,6 +43,12 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
     function handleExportSubmit() {
         let costprice: { [id: string]: number } = {};
         let sellprice: { [id: string]: number } = {};
+        //exportBtn
+        const exportButton = document.getElementById("exportBtn") as HTMLButtonElement
+        if (exportButton) {
+            exportButton.disabled = true;
+            exportButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`
+        }
 
         Object.keys(exportProduct).forEach((key) => {
             let quantity = exportProduct[key];
@@ -89,6 +96,8 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
                     body: JSON.stringify({ data: { ...container, stock: [oldData.stock[0]] as Stocks[] }, action: "export", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})` } as Histories),
                 }).then(res => res.json())
                     .then(res => {
+                        exportButton.disabled = false;
+                        exportButton.innerHTML = `ส่งออก`
                         toast({
                             description: "ส่งออกสินค้าสำเร็จ",
                         });
@@ -125,8 +134,8 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {data.length ? (
-                                data.map((container, index) => (
+                            {dataF.length ? (
+                                dataF.map((container, index) => (
                                     <TableRow key={index}>
                                         <TableCell>{container.name}</TableCell>
                                         <TableCell>{container.category}</TableCell>
@@ -151,7 +160,7 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
                         </TableBody>
                     </Table>
                     <div className="flex justify-center mt-4">
-                        <Button style={{ width: "100%" }} variant={"destructive"} onClick={handleExportSubmit}>ส่งออก</Button>
+                        <Button style={{ width: "100%" }} variant={"destructive"} onClick={handleExportSubmit} id="exportBtn">ส่งออก</Button>
                     </div>
                 </div>
             </DialogContent>

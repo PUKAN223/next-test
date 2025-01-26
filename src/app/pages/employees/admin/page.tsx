@@ -30,6 +30,7 @@ function EmployeePage() {
     const fetchData = async () => {
       const response = await fetch(`/api/employees/get`)
       const employeeData: Employees[] = await response.json()
+      console.log(employeeData)
       setEmployee(employeeData)
     }
     fetchData()
@@ -39,7 +40,7 @@ function EmployeePage() {
   return (
     <div>
       <div className="flex flex-col gap-5 w-full">
-        <DialogAddEmployees addOpen={addOpen} onSetAddOpen={(t) => setAddOpen(t)} schema={EmployeeSchema} user={session.user.username} role={session.user.role}></DialogAddEmployees>
+        <DialogAddEmployees addOpen={addOpen} onSetAddOpen={(t) => setAddOpen(t)} schema={EmployeeSchema} user={session.user.username} role={session.user.role} onUpdate={() => setIsUpdate((v) => !v)}></DialogAddEmployees>
         <PageTitle title="จัดการพนักงาน"></PageTitle>
         <p className='flex text-sm text-gray-500'>คุณสามารถจัดการพนักงานได้ที่นี่.</p>
         <Button className="w-[135px]" onClick={() => setAddOpen(true)}>

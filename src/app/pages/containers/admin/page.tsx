@@ -38,7 +38,7 @@ export default function Containers() {
             const data = await response.json()
             const histories = (await response1.json() as { data: Histories[] }).data
             const exportAmount = histories.filter(x => x.action == "export").map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-            const deleteAmount = histories.filter(x => x.action == "delete").map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+            const deleteAmount = histories.filter(x => x.action == "delete").filter(x => x.data.stock.length > 0).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             const importAmount = histories.filter(x => x.action == "import").filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             setData(data.reverse())
             setAmountData([`${data.length}`, `${(data as Container[]).map(x => x.stock.map(x => x.amount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)}`, `${exportAmount}`, `${importAmount - deleteAmount}`])

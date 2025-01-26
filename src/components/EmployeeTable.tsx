@@ -68,6 +68,11 @@ import DialogManageContainers from "@/dialogs/containers/manageContainers";
 import { getContainers } from "@/functions/stock/get";
 import React from "react";
 import DialogExportContainers from "@/dialogs/containers/exportContainers";
+import DialogEditEmployees from "@/dialogs/employees/editEmployee";
+import { EmployeeSchema } from "@/schemas/Employees";
+import DialogDeleteEmployees from "@/dialogs/employees/deleteEmployee";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./ui/pagination";
+import Employees from "@/props/Employees";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -87,13 +92,13 @@ export default function EmployeeTable<TData, TValue>({
     role
 }: DataTableProps<TData, TValue>) {
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchFilter, setSearchFilter] = useState<"name" | "category">("name"); // Dropdown filter choice
+    const [searchFilter, setSearchFilter] = useState<"name" | "gender">("name"); // Dropdown filter choice
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
     // Filter data based on search filter (name or category)
     const filteredData = useMemo(() => {
         return data.filter((item: any) =>
-            item[searchFilter]?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+            item["profile"][searchFilter]?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
         );
     }, [data, debouncedSearchTerm, searchFilter]);
 
@@ -103,12 +108,24 @@ export default function EmployeeTable<TData, TValue>({
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel()
     });
+    const [currIndex, setCurrIndex] = useState(0)
+    const { pageIndex, pageSize } = table.getState().pagination;
+    const { setPageIndex, setPageSize, getCanPreviousPage: canPreviousPage, getCanNextPage: canNextPage, getPageCount: pageCount } = table;
     const [editOpen, setEditOpen, editData, setEditData] = useDialogData()
     const [deleteOpen, setDeleteOpen, deleteData, setDeleteData] = useDialogData()
     const [manageOpen, setManageOpen, manageData, setManageData] = useDialogData()
 
     useEffect(() => {
-        onUpdate()
+        console.log(currIndex)
+        setPageIndex(currIndex)
+    }, [pageIndex])
+
+    useEffect(() => {
+        setPageSize(5)
+        if (deleteOpen == false && editOpen == false) {
+            setCurrIndex(pageIndex)
+            onUpdate()
+        }
     }, [deleteOpen, editOpen])
 
     return (
@@ -127,48 +144,48 @@ export default function EmployeeTable<TData, TValue>({
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="z-0">
-                        <DropdownMenuItem onClick={() => setSearchFilter("name")}>Name</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setSearchFilter("category")}>Category</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSearchFilter("name")}>ชื่อ</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSearchFilter("gender")}>เพศ</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
 
             <div className="rounded-md border">
-                <DialogManageContainers manageOpen={manageOpen} onSetManageOpen={(t) => setManageData(t)} data={manageData as any} onUpdate={onUpdate} user={user} role={role} />
-                <DialogEditContainers editOpen={editOpen} onSetEditOpen={(t) => setEditOpen(t)} editData={editData} schema={ContainerSchema} user={user} role={role} />
-                <DialogDeleteContainers deleteOpen={{ open: deleteOpen, data: deleteData }} onSetDeleteOpen={(t) => setDeleteOpen(t)} user={user} role={role} />
+                <DialogEditEmployees editOpen={editOpen} onSetEditOpen={(t) => setEditOpen(t)} editData={editData as any} schema={EmployeeSchema} user={user} role={role} onUpdate={onUpdate} />
+                <DialogDeleteEmployees deleteOpen={{ open: deleteOpen, data: deleteData as any }} onSetDeleteOpen={(t) => setDeleteOpen(t)} user={user} role={role} onUpdate={onUpdate}></DialogDeleteEmployees>
 
                 <Table>
                     <TableHeader>
                         <TableRow>
                             {columns.map((column) => (
-                                <TableHead style={{ maxWidth: "1000px", width: "30%" }} key={column.id}>{column.header as any}</TableHead>
+                                <TableHead style={{ maxWidth: "1000px", width: "27.5%" }} key={column.id}>{column.header as any}</TableHead>
                             ))}
+                            <TableHead style={{ maxWidth: "1000px", width: "27.5%" }}></TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
-                        {filteredData.length ? (
-                            filteredData.map((row, index) => (
+                        {table.getRowModel().rows.length ? (
+                            table.getRowModel().rows.map((row, index) => (
                                 <TableRow key={index}>
                                     {columns.map((column) => (
                                         <React.Fragment key={column.id}>
                                             {(column as any).accessorKey === "name" ? (
                                                 <TableCell className="text-black-500">
                                                     <div className="flex gap-2 items-center">
-                                                        <img className="h-10 w-10 rounded-[5px]" src={(row as any).logo} alt="product-image" />
-                                                        <span>{(column as any).accessorKey ? (row as any)[(column as any).accessorKey] : null}</span>
+                                                        <img className="h-10 w-10 rounded-[5px]" src={(row.original as Employees).profile.image} alt="profile-image" />
+                                                        <span className="translate-y-0.5">{(row.original as Employees).profile.name}</span>
                                                     </div>
                                                 </TableCell>
                                             ) : (
                                                 <>
-                                                    {(column as any).accessorKey == "quantity" ? (
+                                                    {((column as any).accessorKey == "username" || (column as any).accessorKey == "password") ? (
                                                         <TableCell className="text-black-500">
-                                                            {(row as { stock: any[] }).stock.reduce((a, b) => a + b.amount, 0)}
+                                                            {(column as any).accessorKey ? (row.original as Employees)[(column as any).accessorKey as "username"] : null}
                                                         </TableCell>
                                                     ) : (
                                                         <TableCell className="text-black-500">
-                                                            {(column as any).accessorKey ? (row as any)[(column as any).accessorKey] : null}
+                                                            {(column as any).accessorKey ? (row.original as Employees)["profile"][(column as any).accessorKey as "image"] : null}
                                                         </TableCell>
                                                     )}
                                                 </>
@@ -180,13 +197,13 @@ export default function EmployeeTable<TData, TValue>({
                                             <div className="flex justify-end space-x-2 items-center" style={{ position: "relative" }}>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant={"destructive"}><Ellipsis /></Button>
+                                                        <Button variant={"outline"}><Ellipsis /></Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent>
                                                         <DropdownMenuItem
                                                             onClick={() => {
-                                                                console.log(row)
-                                                                setEditData(true, row);
+                                                                console.log(row.original)
+                                                                setEditData(true, row.original);
                                                             }}
                                                             className="text-blue-500"
                                                         >
@@ -194,7 +211,7 @@ export default function EmployeeTable<TData, TValue>({
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             onClick={() => {
-                                                                setDeleteData(true, row);
+                                                                setDeleteData(true, row.original);
                                                             }}
                                                             className="text-red-500"
                                                         >
@@ -202,17 +219,6 @@ export default function EmployeeTable<TData, TValue>({
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
-
-                                                <Button
-                                                    onClick={() => {
-                                                        getContainers((row as any)._id).then(res => {
-                                                            setManageData(true, res[0])
-                                                        })
-                                                    }}
-                                                    id={(row as any).id as string}
-                                                >
-                                                    ดูสินค้า
-                                                </Button>
                                             </div>
                                         </TableCell>
                                     )}
@@ -231,22 +237,70 @@ export default function EmployeeTable<TData, TValue>({
 
             {/* Pagination */}
             <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
+                {data.length > 0 ? (
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    href="#"
+                                    onClick={(e) => {
+                                        if (canPreviousPage()) {
+                                            e.preventDefault();
+                                            setCurrIndex(pageIndex - 1)
+                                            setPageIndex(pageIndex - 1);  // Go to previous page
+                                        } else e.preventDefault();
+                                    }}
+                                />
+                            </PaginationItem>
+
+                            {/* Page Number Logic */}
+                            {(() => {
+                                const start = Math.max(0, pageIndex - 2); // Start the page range 2 pages before the current page
+                                const end = Math.min(pageCount(), start + 5); // Limit the page range to 5 pages
+
+                                const pages = [];
+                                for (let i = start; i < end; i++) {
+                                    pages.push(i);
+                                }
+
+                                return pages.map((page) => (
+                                    <PaginationItem key={page}>
+                                        <PaginationLink
+                                            href="#"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setCurrIndex(page)
+                                                setPageIndex(page);  // Set page to the clicked page
+                                            }}
+                                            className={pageIndex === page ? "bg-black" : ""}
+                                            isActive={pageIndex === page}
+                                        >
+                                            <p className={pageIndex === page ? "text-white" : ""}>
+                                                {page + 1}
+                                            </p>
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ));
+                            })()}
+
+                            {/* Next Button */}
+                            <PaginationItem>
+                                <PaginationNext
+                                    href="#"
+                                    onClick={(e) => {
+                                        if (canNextPage()) {
+                                            setCurrIndex(pageIndex + 1)
+                                            e.preventDefault();
+                                            setPageIndex(pageIndex + 1);  // Go to next page
+                                        } else e.preventDefault();
+                                    }}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                ) : (
+                    <></>
+                )}
             </div>
         </>
     );

@@ -32,15 +32,17 @@ export default function Dashboard() {
             const month = new Date().toLocaleDateString().split("/")[0]
             const exportSell = histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].sellPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             const importCost = histories.filter(x => x.action == "import").filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-            const deleteSell = histories.filter(x => x.action == "delete").filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+            const deleteSell = histories.filter(x => x.action == "delete").filter(x => x.data.stock.length > 0).filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             setExpense(importCost - deleteSell)
             setIncome(exportSell)
 
             const hData: SalesProps[] = []
+            setExportAmount(0)
             histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[0] == month).filter(x => x.data.stock.length == 1).reverse().forEach((data, i) => {
-                if (i < 5) {
+                if (i < 6) {
                     hData.push({ name: data.data.name, logo: data.data.logo, saleAmount: `${data.data.stock[0].amount}x`, description: data.data.description })
                 }
+                setExportAmount((am) => am + data.data.stock[0].amount)
             })
             setSData(hData)
         }
@@ -66,10 +68,9 @@ export default function Dashboard() {
                         />
                     ))}
                 </section>
-                <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
+                <section className="grid grid-cols-1 gap-4 transition-all lg:grid-cols-2">
                     <CardContent>
                         <h1 style={{ "fontSize": 20, textAlign: "center" }} className="p-5 font">ภาพรวม</h1>
-
                         <BarChart />
                     </CardContent>
                     <CardContent className="flex justify-start gap-4">

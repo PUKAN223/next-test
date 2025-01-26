@@ -6,12 +6,13 @@ import { Nav } from "./ui/nav";
 import AdminLink from "@/configs/SideNavbars";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, LogOutIcon } from "lucide-react";
 import { useWindowWidth } from "@react-hook/window-size";
 import { usePathname, useRouter } from "next/navigation";
 import Configs from "@/configs/SideNavbars";
 import NavbarLinks from "@/props/SideNavbar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { signOut } from "next-auth/react";
 
 type Props = { role: string; userName: string; userImage: string };
 
@@ -19,9 +20,24 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const onlyWidth = useWindowWidth();
-  const mobileWidth = onlyWidth < 768;
+  const mobileWidth = onlyWidth < 1100;
+
+  useEffect(() => {
+    document.getElementById("w-id").style.width = "12%"
+    document.getElementById("cont").style.marginLeft = "12%"
+    document.getElementById("cont").style.width = "88%"
+  }, [])
 
   function toggleSidebar() {
+    if (isCollapsed) {
+      document.getElementById("w-id").style.width = "12%"
+      document.getElementById("cont").style.marginLeft = "12%"
+      document.getElementById("cont").style.width = "88%"
+    } else {
+      document.getElementById("w-id").style.width = "8%"
+      document.getElementById("cont").style.marginLeft = "8%"
+      document.getElementById("cont").style.width = "92%"
+    }
     setIsCollapsed(!isCollapsed);
   }
 
@@ -37,13 +53,13 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 sidebar">
+    <div className="sticky min-w-[80px] border-r px-3 pb-10 pt-24 sidebar flex flex-col justify-between h-screen fixed top-0 left-0 bottom-0">
       <div className="mb-6">
         <TooltipProvider>
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <div className="flex justify-center pl-4">
-                <Avatar className="w-16 h-16">
+                <Avatar className="w-16 h-16 translate-x-[-5px]">
                   {userImage ? (
                     <AvatarImage src={userImage} alt={userName} />
                   ) : (
@@ -71,8 +87,12 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
         </div>
       )}
 
-      {/* Navigation Links */}
       <Nav isCollapsed={mobileWidth ? true : isCollapsed} links={Link} />
+      <Button className="mt-auto" variant={"ghost"} onClick={() => {
+        signOut()
+      }}>
+        <LogOutIcon />
+      </Button>
     </div>
   );
 }

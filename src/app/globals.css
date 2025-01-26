@@ -151,3 +151,9 @@ input:focus {
     transform: scale(1);
   }
 }
+
+.sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}

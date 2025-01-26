@@ -5,10 +5,11 @@ type Props = {
     deleteOpen: { open: boolean, data: any },
     onSetDeleteOpen: (t: boolean) => void,
     user: string,
-    role: string
+    role: string,
+    onUpdate: () => void;
 }
 
-export default function DialogDeleteContainers({ deleteOpen, onSetDeleteOpen, user, role }: Props) {
+export default function DialogDeleteContainers({ deleteOpen, onSetDeleteOpen, user, role, onUpdate }: Props) {
     return (
         <AlertDialog open={deleteOpen.open}>
             <AlertDialogContent>
@@ -19,9 +20,9 @@ export default function DialogDeleteContainers({ deleteOpen, onSetDeleteOpen, us
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => onSetDeleteOpen(false)}>ยกเลิก</AlertDialogCancel>
-                    <AlertDialogAction color={"red"} onClick={() => {
-                        handleSubmitDelete((deleteOpen as any).data._id as string, user, role, onSetDeleteOpen)
+                    <AlertDialogCancel id="cancelBtnC" onClick={() => onSetDeleteOpen(false)}>ยกเลิก</AlertDialogCancel>
+                    <AlertDialogAction id="deleteBtnC" color={"red"} onClick={() => {
+                        handleSubmitDelete((deleteOpen as any).data._id as string, user, role, onSetDeleteOpen, onUpdate)
                     }}>ลบ</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

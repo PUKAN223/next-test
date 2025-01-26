@@ -24,7 +24,7 @@ export default function SalesCard(props: SalesProps) {
             </div>
         </div>
       </section>
-      <p>{props.saleAmount}</p>
+      <p className="text-sm text-gray-500">{props.saleAmount}</p>
     </div>
   );
 }

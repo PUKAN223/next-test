@@ -30,7 +30,7 @@ export default function DialogAddContainers({ addOpen, onSetAddOpen, schema, use
             name: "",
             category: "",
             description: ""
-        },
+        }
     });
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 

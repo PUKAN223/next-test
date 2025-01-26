@@ -3,6 +3,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { CardProps } from "@/props/Card";
+import CountUp from "react-countup"
 
 export default function Card(props: CardProps) {
   return (
@@ -14,7 +15,10 @@ export default function Card(props: CardProps) {
         <props.icon className="h-4 w-4 text-gray-400" />
       </section>
       <section className="flex flex-col gap-1">
-        <h2 className="text-2xl font-semibold">{props.amount}</h2>
+        <div className="flex">
+          <CountUp className="text-2xl font-semibold" start={0} end={parseInt(props.amount)} duration={2} separator="," />
+          <h1 className="text-2xl font-semibold translate-x-1">{props.amount.replace(String(parseInt(props.amount)), "")}</h1>
+        </div>
         <p className="text-xs text-gray-500">{props.discription}</p>
       </section>
     </CardContent>

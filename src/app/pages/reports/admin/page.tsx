@@ -8,7 +8,7 @@ import { Card, CardHeader } from '@/components/ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import Employees from '@/props/Employees'
 import Histories from '@/props/Histories'
-import { Delete, Download, Edit, Filter, Import, SortAsc, SortAscIcon, Upload } from 'lucide-react'
+import { Delete, Download, Edit, Filter, Import, SearchX, SortAsc, SortAscIcon, Upload } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 function ReportHome() {
@@ -38,7 +38,6 @@ function ReportHome() {
           updatedUserData.set(userId, user || null);
         }
       }
-
       setUserData(updatedUserData);
     };
 
@@ -53,44 +52,59 @@ function ReportHome() {
         <PageTitle title="รายงาน"></PageTitle>
         <div className='flex w-full justify-between'>
           <p className='flex text-sm text-gray-500'>คุณสามารถดูรายงานประวัติได้ที่นี่.</p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="max-w-xs justify-end">
-                <SortAsc></SortAsc>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-0">
-              {(["import", "export", "edit", "delete", "create"]).map(x => (
-                <DropdownMenuItem onClick={() => {
-                  if (x !== "create") {
-                    const t: any = []
-                    history.forEach(d => {
-                      if (d.action == x) {
-                        if (d.action == "import" && d.data.stock.length > 0) {
-                          t.push(d)
-                        } else if (d.action !== "import") {
+          <div className='flex space-x-2'>
+            <Button variant={"outline"} className='text-red-500' onClick={() => {
+              fetch("/api/stock/histories/get")
+                .then(res => res.json())
+                .then((data: { data: Histories[] }) => {
+                  setHistory(data.data.reverse())
+                  setFHistory(data.data.reverse())
+                  setHisC(15)
+                })
+            }}>
+              <SearchX></SearchX>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className='flex space-x-1'>
+                  <Button variant="outline" className="max-w-xs justify-end">
+                    <SortAsc></SortAsc>
+                  </Button>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="z-0">
+                {(["import", "export", "edit", "delete", "create"]).map(x => (
+                  <DropdownMenuItem onClick={() => {
+                    if (x !== "create") {
+                      const t: any = []
+                      history.forEach(d => {
+                        if (d.action == x) {
+                          if (d.action == "import" && d.data.stock.length > 0) {
+                            t.push(d)
+                          } else if (d.action !== "import") {
+                            t.push(d)
+                          }
+                        }
+                      })
+                      setFHistory(t)
+                    } else {
+                      const t: any = []
+                      history.forEach(d => {
+                        if (d.action == "import" && d.data.stock.length == 0) {
                           t.push(d)
                         }
-                      }
-                    })
-                    setFHistory(t)
-                  } else {
-                    const t: any = []
-                    history.forEach(d => {
-                      if (d.action == "import" && d.data.stock.length == 0) {
-                        t.push(d)
-                      }
-                    })
-                    setFHistory(t)
-                  }
-                }}>{getABadge(x as any)}</DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                      })
+                      setFHistory(t)
+                    }
+                  }}>{getABadge(x as any)}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         {userData.size > 0 ? (
           <div className='space-y-5'>
-            {Fhistory.filter((_x, i) => i <= hisC).map(x => (
+            {Fhistory.reverse().filter((_x, i) => i <= hisC).map(x => (
               <CardContent key={(x as any)._id} className='h-28'>
                 <div className='flex w-full justify-between'>
                   <div className='w-full flex'>

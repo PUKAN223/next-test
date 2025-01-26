@@ -21,17 +21,15 @@ export default async function RootLayout({
 
   return (
     <div className="flex w-full">
-      {/* Sidebar with 20% width */}
-      <div id="w-id" className="fixed top-0 left-0 h-full"> {/* Sidebar takes 20% */}
+      <div id="w-id" className="fixed top-0 left-0 h-full">
         <SideNavbar
           role={session.user.role}
           userName={session.user.username}
-          userImage={`https://icon-library.com/images/no-profile-pic-icon/no-profile-pic-icon-11.jpg`}
+          userImage={"/no-profile.jpg"}
         />
       </div>
 
-      {/* Main content area with 20% width */}
-      <div id="cont" className="p-8"> {/* Content area takes 20% */}
+      <div id="cont" className="p-8">
         {children}
       </div>
       <Toaster />

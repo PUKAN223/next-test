@@ -73,11 +73,11 @@ export default function DialogAddProducts({ addOpen, onSetAddOpen, schema, data,
 
         const parsedValues = {
             ...values,
-            createAt: new Date().toISOString(),
+            createAt: new Date().toLocaleDateString('en-GB'),
             amount: parseFloat(values.amount.toString()),
             costPrice: parseFloat(values.costPrice.toString()),
             sellPrice: parseFloat(values.sellPrice.toString()),
-            expiryDate: values.expiryDate,
+            expiryDate: new Date(values.expiryDate).toLocaleDateString('en-GB'),
         };
         const result = stockSchema.safeParse(parsedValues);
 
@@ -117,7 +117,7 @@ export default function DialogAddProducts({ addOpen, onSetAddOpen, schema, data,
                                 headers: {
                                     "Content-Type": "application/json"
                                 },
-                                body: JSON.stringify({ data: { ...containers, stock: [parsedValues] }, action: "import", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})` } as Histories),
+                                body: JSON.stringify({ data: { ...containers, stock: [parsedValues] }, action: "import", timeStamp: new Date().toLocaleDateString('en-GB'), createBy: username + ` (${role})` } as Histories),
                             }).then(res => res.json())
                                 .then(res => {
                                     submitButton.disabled = false;

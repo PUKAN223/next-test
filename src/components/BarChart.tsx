@@ -24,9 +24,9 @@ export default function BarChartD({ }: Props) {
       const response1 = await fetch(`/api/stock/histories/get`)
       const histories = (await response1.json() as { data: Histories[] }).data
       for (let i = 1; i <= 12; i++) {
-        const sellP = histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[0] == `${i}`).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].sellPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-        const importCost = histories.filter(x => x.action == "import").filter(x => x.timeStamp.split("/")[0] == `${i}`).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-        const deleteSell = histories.filter(x => x.action == "delete").filter(x => x.timeStamp.split("/")[0] == `${i}`).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+        const sellP = histories.filter(x => x.action == "export").filter(x => parseInt(x.timeStamp.split("/")[1]) == i).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].sellPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+        const importCost = histories.filter(x => x.action == "import").filter(x => parseInt(x.timeStamp.split("/")[1]) == i).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+        const deleteSell = histories.filter(x => x.action == "delete").filter(x => parseInt(x.timeStamp.split("/")[1]) == i).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].costPrice * x.data.stock[0].amount).reduce((a, b) => a + b, 0)
         data[i - 1].total = sellP - (importCost - deleteSell);
       }
       setbData(data)
@@ -48,7 +48,7 @@ export default function BarChartD({ }: Props) {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickFormatter={(value) => value.slice(0, 5)}
         />
         <ChartTooltip
           cursor={false}

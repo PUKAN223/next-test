@@ -79,7 +79,7 @@ export default function handleSubmitAdd(
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            body: JSON.stringify({ data: formObject, action: "import", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})`} as Histories),
+                            body: JSON.stringify({ data: formObject, action: "import", timeStamp: new Date().toLocaleDateString('en-GB'), createBy: username + ` (${role})`} as Histories),
                         }).then(res => res.json())
                             .then(_res => {
                                 form.reset()

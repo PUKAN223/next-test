@@ -93,7 +93,7 @@ export default function DialogExportContainers({ exportOpen, onExportOpen, data,
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ data: { ...container, stock: [oldData.stock[0]] as Stocks[] }, action: "export", timeStamp: new Date().toLocaleDateString(), createBy: username + ` (${role})` } as Histories),
+                    body: JSON.stringify({ data: { ...container, stock: [oldData.stock[0]] as Stocks[] }, action: "export", timeStamp: new Date().toLocaleDateString('en-GB'), createBy: username + ` (${role})` } as Histories),
                 }).then(res => res.json())
                     .then(res => {
                         exportButton.disabled = false;

@@ -99,8 +99,8 @@ export default function DialogManageContainers({ manageOpen, onSetManageOpen, da
                                         <TableRow key={index}>
                                             <TableCell>#{index + 1}</TableCell>
                                             <TableCell>{item.amount}x</TableCell>
-                                            <TableCell>{format(new Date(item.expiryDate), 'dd/MM/yyyy')}</TableCell>
-                                            <TableCell>{format(new Date(item.createAt), 'dd/MM/yyyy')}</TableCell>
+                                            <TableCell>{item.expiryDate}</TableCell>
+                                            <TableCell>{item.createAt}</TableCell>
                                             <TableCell>{item.costPrice.toFixed(2)}฿</TableCell>
                                             <TableCell>{item.sellPrice.toFixed(2)}฿</TableCell>
                                             <TableCell style={{ position: "relative" }}>
@@ -124,7 +124,7 @@ export default function DialogManageContainers({ manageOpen, onSetManageOpen, da
                                                                     headers: {
                                                                         "Content-Type": "application/json"
                                                                     },
-                                                                body: JSON.stringify({ data: { ...newData, stock: [deleted] }, action: "delete", timeStamp: new Date().toLocaleDateString(), createBy: user + ` (${role})` } as unknown as Histories),
+                                                                body: JSON.stringify({ data: { ...newData, stock: [deleted] }, action: "delete", timeStamp: new Date().toLocaleDateString('en-GB'), createBy: user + ` (${role})` } as unknown as Histories),
                                                                 }).then(res => res.json())
                                                                     .then(res => {
                                                                         toast("ลบสินค้าสำเร็จ")

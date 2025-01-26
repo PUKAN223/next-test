@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeBuildCommand": "bun run build",
-    "beforeDevCommand": "bun run dev",
+    "beforeDevCommand": "bun run start",
     "devPath": "http://localhost:3000",
     "distDir": "../out"
   },

@@ -17,7 +17,6 @@ const nextConfig: NextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    basePath: "inventory-management",
     typescript: {
         ignoreBuildErrors: true,
     },

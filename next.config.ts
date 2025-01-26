@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    output: "export",
+    basePath: "inventory-management",
     typescript: {
         ignoreBuildErrors: true,
     },

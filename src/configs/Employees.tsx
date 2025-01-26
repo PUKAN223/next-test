@@ -8,8 +8,8 @@ export const EmployeeData: ColumnDef<Employees>[] = [
         header: "ชื่อ",
         cell: ({ row }) => (
             <div className="flex gap-2 items-center" >
-                <img className="h-10 w-10" src={row.original.profile[3]} alt="product-image" />
-                <p>{row.original.profile[0]}</p>
+                <img className="h-10 w-10" src={row.original.profile.image} alt="product-image" />
+                <p>{row.original.profile.name}</p>
             </div>
         )
     },

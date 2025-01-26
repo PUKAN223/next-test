@@ -88,11 +88,14 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
       )}
 
       <Nav isCollapsed={mobileWidth ? true : isCollapsed} links={Link} />
-      <Button className="mt-auto" variant={"ghost"} onClick={() => {
-        signOut()
-      }}>
-        <LogOutIcon />
-      </Button>
+      <div className="h-full flex flex-col">
+        <div className="w-full"></div>
+        <Button className="w-full" variant={"ghost"} onClick={() => {
+          signOut({ redirect: true, callbackUrl: "/" })
+        }}>
+          <LogOutIcon />
+        </Button>
+      </div>
     </div>
   );
 }

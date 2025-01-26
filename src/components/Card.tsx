@@ -16,7 +16,7 @@ export default function Card(props: CardProps) {
       </section>
       <section className="flex flex-col gap-1">
         <div className="flex">
-          <CountUp className="text-2xl font-semibold" start={0} end={parseInt(props.amount)} duration={2} separator="," />
+          <CountUp className="text-2xl font-semibold" start={0} end={parseInt(props.amount)} duration={1.5} separator="," />
           <h1 className="text-2xl font-semibold translate-x-1">{props.amount.replace(String(parseInt(props.amount)), "")}</h1>
         </div>
         <p className="text-xs text-gray-500">{props.discription}</p>

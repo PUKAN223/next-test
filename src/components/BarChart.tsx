@@ -1,21 +1,22 @@
 /** @format */
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  BarChart as BarGraph,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Bar
-} from "recharts";
 import BarData from "@/configs/BarDatas"
 import Histories from "@/props/Histories";
 import BarDataProps from "@/props/BarData";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 
 type Props = {};
 
+const chartConfig = {
+  total: {
+    label: "กำไร",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig
 
-export default function BarChart({ }: Props) {
+export default function BarChartD({ }: Props) {
   const [bData, setbData] = useState<BarDataProps[]>()
   useEffect(() => {
     const fetchData = async () => {
@@ -33,24 +34,35 @@ export default function BarChart({ }: Props) {
     fetchData()
   }, [])
   return (
-    <ResponsiveContainer width={"100%"} height={350}>
-      <BarGraph data={bData}>
+    <ChartContainer config={chartConfig}>
+      <BarChart
+        accessibilityLayer
+        data={bData}
+        margin={{
+          top: 20,
+        }}
+      >
+        <CartesianGrid vertical={false} />
         <XAxis
-          dataKey={"name"}
+          dataKey="name"
           tickLine={false}
+          tickMargin={10}
           axisLine={false}
-          stroke="#888888"
-          fontSize={12}
+          tickFormatter={(value) => value.slice(0, 3)}
         />
-        <YAxis
-          tickLine={false}
-          axisLine={false}
-          stroke="#888888"
-          fontSize={12}
-          tickFormatter={(value) => `$${value}`}
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel />}
         />
-        <Bar dataKey={"total"} radius={[4, 4, 0, 0]} />
-      </BarGraph>
-    </ResponsiveContainer>
+        <Bar dataKey="total" fill="var(--color-desktop)" radius={8}>
+          <LabelList
+            position="top"
+            offset={12}
+            className="fill-foreground"
+            fontSize={12}
+          />
+        </Bar>
+      </BarChart>
+    </ChartContainer>
   );
 }

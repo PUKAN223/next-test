@@ -43,7 +43,7 @@ export default function Home() {
   console.log(status)
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-6 flex-col bg-gray-50">
+    <div className="flex justify-center items-center min-h-screen p-6 flex-col">
       <Image className="mt-4" src={"/stock-icons.png"} width={200} height={200} alt="Logo" />
       <h2 className="text-xl font-bold mt-6 mb-4">การเข้าสู่ระบบสำหรับพนักงาน</h2>
       <Form {...loginForm}>

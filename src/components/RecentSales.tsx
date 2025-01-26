@@ -15,7 +15,7 @@ export default function SalesCard(props: SalesProps) {
     <div className="flex flex-wrap justify-between">
       <section className="flex justify-start gap-3 ">
         <div className=" h-12 w-12 rounded-full bg-gray-100 p-1">
-          <img width={200} height={200} src={`${props.logo}`} alt="avatar" />
+          <img width={200} height={200} className="rounded-full" src={`${props.logo}`} alt="avatar" />
         </div>
         <div className="text-sm">
             <p>{props.name}</p>

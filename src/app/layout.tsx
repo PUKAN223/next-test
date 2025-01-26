@@ -1,12 +1,13 @@
 /** @format */
+import "./globals.css";
 
 import type { Metadata } from "next";
 import { Kanit } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import SessionProvider from "@/components/SessionProviders";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Kanit({
     weight: ['400', '700'],
@@ -27,12 +28,18 @@ export default async function RootLayout({
 }) {
     const session = await getServerSession(authOptions)
     return (
-        <html>
+        <html lang="en" suppressHydrationWarning>
+            <head></head>
             <body className={inter.className}>
-                <SessionProvider session={session}>
-                    {children}
-                    <Toaster />
-                </SessionProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem>
+                    <SessionProvider session={session}>
+                        {children}
+                        <Toaster />
+                    </SessionProvider>
+                </ThemeProvider>
             </body>
         </html>
     )

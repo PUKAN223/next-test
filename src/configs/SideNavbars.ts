@@ -31,13 +31,6 @@ const ConfigsAdmin: Link[] = [
         id: "employee"
     },
     {
-        title: "เเจ้งเตือน",
-        href: "/pages/nofications/admin",
-        icon: BellRing,
-        variant: "ghost",
-        id: "nofications"
-    },
-    {
         title: "ตั้งค่า",
         href: "/pages/settings/admin",
         icon: Settings,

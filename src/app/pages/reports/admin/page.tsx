@@ -21,7 +21,7 @@ function ReportHome() {
     fetch("/api/stock/histories/get")
       .then(res => res.json())
       .then((data: { data: Histories[] }) => {
-        setHistory(data.data.reverse())
+        setHistory(data.data)
         setFHistory(data.data.reverse())
         setHisC(15)
       })
@@ -57,7 +57,6 @@ function ReportHome() {
               fetch("/api/stock/histories/get")
                 .then(res => res.json())
                 .then((data: { data: Histories[] }) => {
-                  setHistory(data.data.reverse())
                   setFHistory(data.data.reverse())
                   setHisC(15)
                 })

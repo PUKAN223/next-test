@@ -27,7 +27,6 @@ export default function Containers() {
     const [addOpen, setAddOpen, addData, setAddData] = useDialogData()
     const [exportOpen, setExportOpen, exportData, setExportData] = useDialogData()
     const [isUpdate, SetIsUpdate] = useState<boolean>(false)
-    console.log(process.env.API_URL)
     useEffect(() => {
         if (!session) redirect("/pages/containers")
         if (session.user.role == "user") redirect("/pages/containers")
@@ -42,10 +41,13 @@ export default function Containers() {
             const importAmount = histories.filter(x => x.action == "import").filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             setData(data.reverse())
             setAmountData([`${data.length}`, `${(data as Container[]).map(x => x.stock.map(x => x.amount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)}`, `${exportAmount}`, `${importAmount - deleteAmount}`])
-            console.log(data)
         }
         fetchData()
-    }, [isUpdate, exportOpen, addOpen])
+    }, [isUpdate])
+
+    useEffect(() => {
+        SetIsUpdate(!isUpdate)
+    }, [exportOpen, addOpen])
 
     return (
         <div className="flex flex-col gap-5 w-full">

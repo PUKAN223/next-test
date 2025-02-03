@@ -8,6 +8,8 @@ import SessionProvider from "@/components/SessionProviders";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { toast } from "sonner";
+import Nofications from "@/components/Nofications";
 
 const inter = Kanit({
     weight: ['400', '700'],

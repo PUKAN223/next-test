@@ -6,13 +6,16 @@ import { Nav } from "./ui/nav";
 import AdminLink from "@/configs/SideNavbars";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { ChevronRight, LogOutIcon } from "lucide-react";
+import { BellRing, ChevronRight, LogOutIcon } from "lucide-react";
 import { useWindowWidth } from "@react-hook/window-size";
 import { usePathname, useRouter } from "next/navigation";
 import Configs from "@/configs/SideNavbars";
 import NavbarLinks from "@/props/SideNavbar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { signOut } from "next-auth/react";
+import ConfigsAdmin from "@/configs/SideNavbars";
+import { toast } from "sonner";
+import Container from "@/props/Containers";
 
 type Props = { role: string; userName: string; userImage: string };
 
@@ -21,6 +24,27 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
   const pathname = usePathname();
   const onlyWidth = useWindowWidth();
   const mobileWidth = onlyWidth < 1100;
+
+  useEffect(() => {
+    if (toast.getHistory().length == 0 && window.localStorage.getItem("nofications") == "true") {
+      if (toast.getHistory().length == 0) {
+        fetch("/api/stock/containers/get")
+          .then(res => res.json())
+          .then((data: Container[]) => {
+            data.forEach((d, i) => {
+              const amount = d.stock.reduce((a, b) => a + b.amount, 0)
+              if (amount <= 12 && i < 6) {
+                toast.dismiss()
+                toast.error(
+                  <div className="flex">
+                    {d.name} {d.description}<div className="w-2"></div><p className="text-red-500">เหลือน้อย!</p>
+                  </div>)
+              }
+            })
+          })
+      }
+    }
+  }, [])
 
   useEffect(() => {
     document.getElementById("w-id").style.width = "12%"

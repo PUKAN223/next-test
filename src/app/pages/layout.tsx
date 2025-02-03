@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import Nofications from "@/components/Nofications";
 
 export default async function RootLayout({
   children

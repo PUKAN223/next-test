@@ -1,7 +1,7 @@
 import Link from "@/props/SideNavbar"
 import { BellRing, ChartLine, Container, History, Home, Settings, ShoppingCart, User } from "lucide-react";
 
-const ConfigsAdmin: Link[] = [
+let ConfigsAdmin: Link[] = [
     {
         title: "หน้าหลัก",
         href: "/pages/dashboards/admin",

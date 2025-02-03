@@ -30,7 +30,6 @@ function EmployeePage() {
     const fetchData = async () => {
       const response = await fetch(`/api/employees/get`)
       const employeeData: Employees[] = await response.json()
-      console.log(employeeData)
       setEmployee(employeeData)
     }
     fetchData()

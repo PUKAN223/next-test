@@ -18,7 +18,10 @@ const Settings: { [key: string]: SettingProps[] } = {
                 } else {
                     setTheme("light");
                 }
-            }
+            },
+            onKeyChange: (key: string) => {
+            },
+            key: () => { return "theme" }
         },
         {
             icon: CircleAlert,
@@ -29,7 +32,10 @@ const Settings: { [key: string]: SettingProps[] } = {
             onToggle: (toggle: boolean, setTheme: (theme: string) => void, setNofication: (bool: boolean) => void) => {
                 setNofication(toggle)
                 window.localStorage.setItem("nofications", `${toggle}`)
-            }
+            },
+            onKeyChange: (key: string) => {
+            },
+            key: () => { return "nofications" }
         },
         {
             icon: BellIcon,
@@ -37,12 +43,45 @@ const Settings: { [key: string]: SettingProps[] } = {
             type: "input",
             descriptionn: 'ตั้งค่าจำนวนสินค้าใกล้หมดที่ต้องการเเจ้งเตือน',
             onToggle: (toggle: boolean, setTheme: (theme: string) => void) => {
-                
             },
-            state: (theme, nofication) => false
+            state: (theme, nofication) => false,
+            onKeyChange: (key: string) => {
+                window.localStorage.setItem("nofiA", key)
+            },
+            key: () => { return window.localStorage.getItem("nofiA") || "0" }
         }
     ],
-    user: []
+    user: [{
+        icon: ThermometerIcon,
+        name: "ธีม",
+        type: "toggle",
+        descriptionn: 'เลือกธีม "สว่าง" หรือ "มืด" หน้าเว็บของคุณ',
+        state: (theme, nofication) => theme == "dark",
+        onToggle: (toggle: boolean, setTheme: (theme: string) => void) => {
+            if (toggle) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        },
+        onKeyChange: (key: string) => {
+        },
+        key: () => { return "theme" }
+    },
+    {
+        icon: BellIcon,
+        name: "ตั้งค่าจำนวนสินค้าใกล้หมด",
+        type: "input",
+        descriptionn: 'ตั้งค่าจำนวนสินค้าใกล้หมดที่ต้องการเเจ้งเตือน',
+        onToggle: (toggle: boolean, setTheme: (theme: string) => void) => {
+        },
+        state: (theme, nofication) => false,
+        onKeyChange: (key: string) => {
+            window.localStorage.setItem("nofiA", key)
+        },
+        key: () => { return window.localStorage.getItem("nofiA") || "0" }
+    }
+    ]
 };
 
 export default Settings;

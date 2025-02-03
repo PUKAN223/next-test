@@ -7,5 +7,7 @@ export interface SettingProps {
     type: "toggle" | "input" | "slider",
     descriptionn: string,
     onToggle: (toggle: boolean, setTheme: (theme: string) => void, setNofication: (bool: boolean) => void) => void,
-    state: (theme: string, nofication: string) => boolean
+    state: (theme: string, nofication: string) => boolean,
+    onKeyChange: (key: string) => void;
+    key: () => string;
 }

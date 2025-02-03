@@ -28,7 +28,7 @@ const stockSchema = z.object({
     expiryDate: z.string().min(1, "Required"),
     createAt: z.string().min(1, "Required"),
     costPrice: z.number().min(0, "Only Positive number"),
-    amount: z.number().min(0, "Only Positive number"),
+    amount: z.number().min(1, "Only Positive number"),
     sellPrice: z.number().min(0, "Only Positive number"),
 });
 

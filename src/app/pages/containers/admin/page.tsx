@@ -36,24 +36,22 @@ export default function Containers() {
             const response1 = await fetch(`/api/stock/histories/get`)
             const data = await response.json()
             const histories = (await response1.json() as { data: Histories[] }).data
-            const exportAmount = histories.filter(x => x.action == "export").map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-            const deleteAmount = histories.filter(x => x.action == "delete").filter(x => x.data.stock.length > 0).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
-            const importAmount = histories.filter(x => x.action == "import").filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+            const month = new Date().toLocaleDateString('en-GB').split("/")[1]
+            const year = new Date().toLocaleDateString('en-GB').split("/")[2]
+            const exportAmount = histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[2] == year).filter((x) => x.timeStamp.split("/")[1] == month).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+            const deleteAmount = histories.filter(x => x.action == "delete").filter(x => x.timeStamp.split("/")[2] == year).filter((x) => x.timeStamp.split("/")[1] == month).filter(x => x.data.stock.length > 0).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
+            const importAmount = histories.filter(x => x.action == "import").filter(x => x.timeStamp.split("/")[2] == year).filter((x) => x.timeStamp.split("/")[1] == month).filter(x => x.data.stock.length == 1).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)
             setData(data.reverse())
             setAmountData([`${data.length}`, `${(data as Container[]).map(x => x.stock.map(x => x.amount).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)}`, `${exportAmount}`, `${importAmount - deleteAmount}`])
         }
         fetchData()
     }, [isUpdate])
 
-    useEffect(() => {
-        SetIsUpdate(!isUpdate)
-    }, [exportOpen, addOpen])
-
     return (
         <div className="flex flex-col gap-5 w-full">
             <PageTitle title="คลังสินค้า" />
-            <DialogExportContainers exportOpen={exportOpen} onExportOpen={(o) => setExportOpen(o)} data={data as unknown as (Container[] & { _id: string })} role={session.user.role} username={session.user.username}></DialogExportContainers>
-            <DialogAddContainers addOpen={addOpen} onSetAddOpen={(t) => setAddOpen(t)} schema={ContainerSchema} user={session.user.username} role={session.user.role} />
+            <DialogExportContainers exportOpen={exportOpen} onExportOpen={(o) => { setExportOpen(o); SetIsUpdate(!isUpdate) }} data={data as unknown as (Container[] & { _id: string })} role={session.user.role} username={session.user.username}></DialogExportContainers>
+            <DialogAddContainers addOpen={addOpen} onSetAddOpen={(t) => {setAddOpen(t); SetIsUpdate(!isUpdate) }} schema={ContainerSchema} user={session.user.username} role={session.user.role} />
             <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
                 {CardData["containers"].map((d, i) => (
                     <Card

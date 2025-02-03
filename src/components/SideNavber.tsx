@@ -33,7 +33,7 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
           .then((data: Container[]) => {
             data.forEach((d, i) => {
               const amount = d.stock.reduce((a, b) => a + b.amount, 0)
-              if (amount <= 12 && i < 6) {
+              if (amount <= parseInt(window.localStorage.getItem("nofiA") ?? "0") && i < 3) {
                 toast.dismiss()
                 toast.error(
                   <div className="flex">
@@ -67,12 +67,12 @@ export default function SideNavbar({ role, userName, userImage }: Props) {
 
   let Link: NavbarLinks[];
   if (role === "user") {
-    Link = [];
+    Link = AdminLink.user;
   } else {
     if (pathname.includes("/admin")) {
-      Link = AdminLink;
+      Link = AdminLink.admin;
     } else {
-      Link = [];
+      Link = AdminLink.user;
     }
   }
 

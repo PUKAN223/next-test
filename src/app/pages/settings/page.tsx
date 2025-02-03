@@ -23,10 +23,10 @@ function Page() {
       <PageTitle title="การตั้งค่า" />
       <div className='flex w-full justify-between'>
         <CardContent className='w-full'>
-          {Settings["admin"].map((x, i) => (
+          {Settings["user"].map((x, i) => (
             <>
               {(x.type == "toggle" ? (
-                (i !== Settings["admin"].length - 1) ? (
+                (i !== Settings["user"].length - 1) ? (
                   <div key={i} className='flex-col gap-1 space-y-2'>
                     {(i !== 0 ? (
                       <div className='h-1'></div>
@@ -72,7 +72,7 @@ function Page() {
                 <></>
               ))}
               {(x.type == "input" ? (
-                (i !== Settings["admin"].length - 1 ? (
+                (i !== Settings["user"].length - 1 ? (
                   <div key={i} className='flex-col gap-1 space-y-2'>
                     <div className='h-1'></div>
                     <div className="flex justify-between">

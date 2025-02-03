@@ -89,10 +89,9 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [currIndex, setCurrIndex] = useState(0)
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchFilter, setSearchFilter] = useState<"name" | "category">("name"); // Dropdown filter choice
+    const [searchFilter, setSearchFilter] = useState<"name" | "category">("name");
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-    // Filter data based on search filter (name or category)
     const filteredData = useMemo(() => {
         return data.filter((item: any) =>
             item[searchFilter]?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
@@ -111,6 +110,7 @@ export function DataTable<TData, TValue>({
     const [editOpen, setEditOpen, editData, setEditData] = useDialogData();
     const [deleteOpen, setDeleteOpen, deleteData, setDeleteData] = useDialogData();
     const [manageOpen, setManageOpen, manageData, setManageData] = useDialogData();
+    const [isUpdate, setIsUpdate] = useState(false);
 
     useEffect(() => {
         console.log(currIndex)
@@ -123,7 +123,7 @@ export function DataTable<TData, TValue>({
             setCurrIndex(pageIndex)
             onUpdate()
         }
-    }, [deleteOpen, editOpen]);
+    }, [isUpdate]);
 
     return (
         <>
@@ -148,9 +148,9 @@ export function DataTable<TData, TValue>({
             </div>
 
             <div className="rounded-md border">
-                <DialogManageContainers manageOpen={manageOpen} onSetManageOpen={(t) => setManageData(t)} data={manageData as any} onUpdate={onUpdate} user={user} role={role} />
-                <DialogEditContainers editOpen={editOpen} onSetEditOpen={(t) => setEditOpen(t)} editData={editData} schema={ContainerSchema} user={user} role={role} />
-                <DialogDeleteContainers deleteOpen={{ open: deleteOpen, data: deleteData }} onSetDeleteOpen={(t) => setDeleteOpen(t)} user={user} role={role} onUpdate={onUpdate} />
+                <DialogManageContainers manageOpen={manageOpen} onSetManageOpen={(t) => {setManageData(t); setIsUpdate(!isUpdate) }} data={manageData as any} onUpdate={onUpdate} user={user} role={role} />
+                <DialogEditContainers editOpen={editOpen} onSetEditOpen={(t) => {setEditOpen(t); setIsUpdate(!isUpdate) }} editData={editData} schema={ContainerSchema} user={user} role={role} />
+                <DialogDeleteContainers deleteOpen={{ open: deleteOpen, data: deleteData }} onSetDeleteOpen={(t) => {setDeleteOpen(t); setIsUpdate(!isUpdate) }} user={user} role={role} onUpdate={onUpdate} />
 
                 <Table>
                     <TableHeader>

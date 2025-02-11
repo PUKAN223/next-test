@@ -21,7 +21,7 @@ function ReportHome() {
     fetch("/api/stock/histories/get")
       .then(res => res.json())
       .then((data: { data: Histories[] }) => {
-        setHistory(data.data)
+        setHistory(data.data.reverse())
         setFHistory(data.data.reverse())
         setHisC(15)
       })
@@ -73,29 +73,31 @@ function ReportHome() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="z-0">
                 {(["import", "export", "edit", "delete", "create"]).map(x => (
-                  <DropdownMenuItem onClick={() => {
-                    if (x !== "create") {
-                      const t: any = []
-                      history.forEach(d => {
-                        if (d.action == x) {
-                          if (d.action == "import" && d.data.stock.length > 0) {
-                            t.push(d)
-                          } else if (d.action !== "import") {
+                  <>
+                    <DropdownMenuItem onClick={() => {
+                      if (x !== "create") {
+                        const t: any = []
+                        history.forEach(d => {
+                          if (d.action == x) {
+                            if (d.action == "import" && d.data.stock.length > 0) {
+                              t.push(d)
+                            } else if (d.action !== "import") {
+                              t.push(d)
+                            }
+                          }
+                        })
+                        setFHistory(t)
+                      } else {
+                        const t: any = []
+                        history.forEach(d => {
+                          if (d.action == "import" && d.data.stock.length == 0) {
                             t.push(d)
                           }
-                        }
-                      })
-                      setFHistory(t)
-                    } else {
-                      const t: any = []
-                      history.forEach(d => {
-                        if (d.action == "import" && d.data.stock.length == 0) {
-                          t.push(d)
-                        }
-                      })
-                      setFHistory(t)
-                    }
-                  }}>{getABadge(x as any)}</DropdownMenuItem>
+                        })
+                        setFHistory(t)
+                      }
+                    }}>{getABadge(x as any)}</DropdownMenuItem>
+                  </>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>

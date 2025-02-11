@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction } from 'react';
+import { Dispatch, FormEvent, SetStateAction, use } from 'react';
 import fileToBase64 from "@/functions/fileToBase64";
 import { ContainerSchema } from "@/schemas/Containers";
 import { toast } from 'sonner';
@@ -52,6 +52,7 @@ export default function handleSubmitEdit(
                         description: null,
                         logo: null
                     });
+                    formObject["createBy"] = username;
 
                     const submitButton = (event.target as any)[5] as HTMLButtonElement;
                     const cancelButton = (event.target as any)[4] as HTMLButtonElement;

@@ -1,21 +1,25 @@
 'use client'
 
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import PageTitle from '@/components/PageTitle'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import Container from '@/props/Containers'
 import { BellRing, Terminal, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 function NoficationPage() {
     const [nofication, setNofication] = useState<{ item: Container }[]>([])
     const [exportAmount, setExportAmount] = useState<number>(0)
+    const session = useSession()
 
     useEffect(() => {
         let c = 0;
         fetch("/api/stock/containers/get")
             .then(res => res.json())
-            .then((data: Container[]) => {
+            .then((RawData: Container[]) => {
                 setNofication([])
+                const data = RawData.reverse().filter(x => x.createBy == session.data.user.username)
                 data.forEach((d) => {
                     const amount = d.stock.reduce((a, b) => a + b.amount, 0)
                     console.log(amount, parseInt(window.localStorage.getItem("nofiA") ?? "0"))

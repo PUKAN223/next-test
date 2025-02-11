@@ -1,8 +1,7 @@
 "use client"
 
-import Card, { CardContent } from '@/components/Card'
+import { CardContent } from '@/components/Card'
 import PageTitle from '@/components/PageTitle'
-import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import Settings from '@/configs/SettingConfig'
@@ -11,7 +10,7 @@ import React, { useEffect, useState } from 'react'
 
 function Page() {
   const { theme, setTheme } = useTheme();
-  const [isUpdate, setIsUpdate] = useState(true)
+  const [isUpdate] = useState(true)
   const [nofication, setNofication] = useState(true)
 
   useEffect(() => {

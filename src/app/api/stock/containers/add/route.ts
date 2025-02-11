@@ -1,3 +1,4 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import ConnectDB from "@/functions/mongodbConnect"
 import Container from "@/props/Containers"
 

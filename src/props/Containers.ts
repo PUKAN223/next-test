@@ -7,4 +7,5 @@ export default interface Container {
     logo: string;
     id?: string;
     stock: Stocks[]
+    createBy: string;
   };

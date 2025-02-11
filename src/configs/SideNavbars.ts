@@ -48,8 +48,8 @@ const ConfigSidebar: { [key: string]: Link[] } = {
     ],
     user: [
         {
-            title: "สินค้า",
-            href: "/pages/containers",
+            title: "หน้าหลัก",
+            href: "/pages/dashboards",
             icon: Container,
             variant: "ghost",
             id: "containers"

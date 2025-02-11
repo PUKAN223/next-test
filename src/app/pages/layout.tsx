@@ -1,14 +1,10 @@
 /** @format */
 
-import type { Metadata } from "next";
-import { Kanit } from "next/font/google";
-import { cn } from "../../lib/utils";
 import SideNavbar from "@/components/SideNavber";
 import { Toaster } from "@/components/ui/toaster";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import Nofications from "@/components/Nofications";
 import Employees from "@/props/Employees";
 
 export default async function RootLayout({
@@ -41,8 +37,8 @@ export default async function RootLayout({
         ) : (
           <SideNavbar
             role={session.user.role}
-            userName={(session.user.role == "admin" ? (`${userData.username}`) : (`${userData.profile.name}`))}
-            userImage={(session.user.role == "admin" ? ("/no-profile.jpg") : (`${userData.profile.image}`))}
+            userName={(session.user.role == "admin" ? (`${userData.username}`) : (`${userData?.profile.name}`))}
+            userImage={(session.user.role == "admin" ? ("/no-profile.jpg") : (`${userData?.profile.image}`))}
           />
         )}
       </div>

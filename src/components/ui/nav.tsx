@@ -45,7 +45,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     )}
                   >
                     <link.icon className="h-4 w-4" />
-                    <span className="sr-only">{link.title}</span>
+                    <span className="sr-only text-center">{link.title}</span>
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent

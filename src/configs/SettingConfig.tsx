@@ -69,6 +69,20 @@ const Settings: { [key: string]: SettingProps[] } = {
         key: () => { return "theme" }
     },
     {
+        icon: CircleAlert,
+        name: "การเเจ้งเตือนสินค้า",
+        type: "toggle",
+        descriptionn: 'เปิด/ปิดการเเจ้งเตือนสินค้าใกล้หมด',
+        state: (theme, nofication) => (nofication ? (nofication == "true" ? true : false) : false),
+        onToggle: (toggle: boolean, setTheme: (theme: string) => void, setNofication: (bool: boolean) => void) => {
+            setNofication(toggle)
+            window.localStorage.setItem("nofications", `${toggle}`)
+        },
+        onKeyChange: (key: string) => {
+        },
+        key: () => { return "nofications" }
+    },
+    {
         icon: BellIcon,
         name: "ตั้งค่าจำนวนสินค้าใกล้หมด",
         type: "input",

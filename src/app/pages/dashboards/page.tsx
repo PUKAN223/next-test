@@ -34,7 +34,8 @@ export default function Containers() {
         const fetchData = async () => {
             const response = await fetch(`/api/stock/containers/get`)
             const response1 = await fetch(`/api/stock/histories/get`)
-            const data = await response.json()
+            const rawData = await response.json()
+            const data = (rawData as (Container & { _id: string })[]).filter(x => x.createBy == session.user.username)
             const histories = (await response1.json() as { data: Histories[] }).data.filter(x => x.createBy == session.user.username)
             const month = new Date().toLocaleDateString('en-GB').split("/")[1]
             const year = new Date().toLocaleDateString('en-GB').split("/")[2]

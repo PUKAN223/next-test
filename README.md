@@ -1,6 +1,14 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
+```env
+.env
+API_URL=YOUR_WEB_URL
+NEXTAUTH_SECRET=ANY_SECRET
+NEXTAUTH_URL=YOUR_WEB_URL
+MONGO_DB=YOUR_MONGODB
+PORT=PORT
+```
 
 First, run the development server:
 

@@ -30,13 +30,13 @@ export default function Containers() {
     const [isUpdate, SetIsUpdate] = useState<boolean>(false)
     useEffect(() => {
         if (!session) redirect("/")
-        
         setColumns(ContainerData)
         const fetchData = async () => {
             const response = await fetch(`/api/stock/containers/get`)
             const response1 = await fetch(`/api/stock/histories/get`)
-            const data = await response.json()
-            const histories = (await response1.json() as { data: Histories[] }).data
+            const rawData = await response.json()
+            const data = (rawData as (Container & { _id: string })[]).filter(x => x.createBy == session.user.username)
+            const histories = (await response1.json() as { data: Histories[] }).data.filter(x => x.createBy == session.user.username)
             const month = new Date().toLocaleDateString('en-GB').split("/")[1]
             const year = new Date().toLocaleDateString('en-GB').split("/")[2]
             const exportAmount = histories.filter(x => x.action == "export").filter(x => x.timeStamp.split("/")[2] == year).filter((x) => x.timeStamp.split("/")[1] == month).map(x => x.data.stock[0].amount).reduce((a, b) => a + b, 0)

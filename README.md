@@ -15,7 +15,7 @@ First, You have to install Bun!
 npm i -g bun
 ```
 
-Then. go to project and run
+Then. Go to project and run command
 ```bash
 bun i
 ```

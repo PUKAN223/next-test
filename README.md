@@ -10,8 +10,17 @@ MONGO_DB=YOUR_MONGODB
 PORT=PORT
 ```
 
-First, run the development server:
+First, You have to install Bun!
+```bash
+npm i -g bun
+```
 
+Then cd to project and run
+```bash
+bun i
+```
+
+Finally!
 ```bash
 npm run dev
 # or

@@ -9,6 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import Employees from '@/props/Employees'
 import Histories from '@/props/Histories'
 import { Delete, Download, Edit, Filter, Import, SearchX, SortAsc, SortAscIcon, Upload } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function ReportHome() {
@@ -16,8 +18,10 @@ function ReportHome() {
   const [Fhistory, setFHistory] = useState<Histories[]>([])
   const [userData, setUserData] = useState<Map<string, Employees>>(new Map<string, Employees>())
   const [hisC, setHisC] = useState(0)
+  const session = useSession()
 
   useEffect(() => {
+    if (session.data.user.role == "user") redirect("/pages/dashboards")
     fetch("/api/stock/histories/get")
       .then(res => res.json())
       .then((data: { data: Histories[] }) => {

@@ -5,15 +5,19 @@ import PageTitle from '@/components/PageTitle'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import Settings from '@/configs/SettingConfig'
+import { useSession } from 'next-auth/react'
 import { useTheme } from 'next-themes'
+import { redirect } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function Page() {
   const { theme, setTheme } = useTheme();
   const [isUpdate] = useState(true)
   const [nofication, setNofication] = useState(true)
+  const session = useSession()
 
   useEffect(() => {
+    if (session.data.user.role == "user") redirect("/pages/dashboards")
     setNofication(window.localStorage.getItem("nofications") == "true" ? true : false)
   }, [isUpdate])
 

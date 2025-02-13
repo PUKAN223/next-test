@@ -29,7 +29,7 @@ export default function Containers() {
     const [isUpdate, SetIsUpdate] = useState<boolean>(false)
     useEffect(() => {
         if (!session) redirect("/pages/containers")
-        if (session.user.role == "user") redirect("/pages/containers")
+        if (session.user.role == "user") redirect("/pages/dashboards")
         setColumns(ContainerData)
         const fetchData = async () => {
             const response = await fetch(`/api/stock/containers/get`)

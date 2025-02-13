@@ -4,14 +4,18 @@ import PageTitle from '@/components/PageTitle'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import Container from '@/props/Containers'
 import { BellRing, Terminal, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 function NoficationPage() {
     const [nofication, setNofication] = useState<{ item: Container }[]>([])
     const [exportAmount, setExportAmount] = useState<number>(0)
+    const session = useSession()
 
     useEffect(() => {
         let c = 0;
+        if (session.data.user.role == "user") redirect("/pages/dashboards")
         fetch("/api/stock/containers/get")
             .then(res => res.json())
             .then((data: Container[]) => {

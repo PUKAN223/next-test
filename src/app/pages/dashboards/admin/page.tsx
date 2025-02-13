@@ -24,7 +24,7 @@ export default function Dashboard() {
     const [sData, setSData] = useState<SalesProps[]>([])
     useEffect(() => {
         if (!session) redirect("/pages/dashboards")
-        if (session.user.role == "user") redirect("/pages/dashboards");
+        if (session.user.role == "user") redirect("/pages/dashboards")
 
         const fetchData = async () => {
             const response1 = await fetch(`/api/stock/histories/get`)
